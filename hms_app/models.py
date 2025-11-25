@@ -1,15 +1,29 @@
 from hms_app import db, login_manager
 from flask_login import UserMixin
+from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
-    # Check all tables to find the user
-    user = Admin.query.get(int(user_id))
-    if user: return user
-    user = Doctor.query.get(int(user_id))
-    if user: return user
+    # 1. Check the session to see which table to look in (Fixes ID Collision)
+    role = session.get('role')
+
+    if role == 'admin':
+        return Admin.query.get(int(user_id))
+    elif role == 'doctor':
+        return Doctor.query.get(int(user_id))
+    elif role == 'patient':
+        return Patient.query.get(int(user_id))
+    
+    # 2. Fallback: If session is empty (e.g. 'Remember Me' cookie used after browser restart)
+    # This might still cause collision, but it's a necessary backup.
+    admin = Admin.query.get(int(user_id))
+    if admin: return admin
+    
+    doctor = Doctor.query.get(int(user_id))
+    if doctor: return doctor
+    
     return Patient.query.get(int(user_id))
 
 class Admin(UserMixin, db.Model):

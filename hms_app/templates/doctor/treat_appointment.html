@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4>Treat Patient: {{ appointment.patient.name }}</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Appointment Time:</strong> {{ appointment.appointment_time }}</p>
+                <hr>
+                
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.diagnosis.label(class="form-label fw-bold") }}
+                        {{ form.diagnosis(class="form-control") }}
+                        {% for error in form.diagnosis.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.prescription.label(class="form-label fw-bold") }}
+                        {{ form.prescription(class="form-control") }}
+                        <div class="form-text">List medicines, dosage, and advice.</div>
+                        {% for error in form.prescription.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-success btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, Blueprint
+from flask import render_template, redirect, url_for, flash, Blueprint, session
 from flask_login import login_user, logout_user, current_user
 from hms_app import db
 from hms_app.auth.forms import LoginForm, PatientRegistrationForm
@@ -47,6 +47,11 @@ def login():
 
         # Validate Password
         if user and user.check_password(form.password.data):
+            
+            # --- FIX: Store role in session to prevent ID collision ---
+            session['role'] = user.role
+            # ---------------------------------------------------------
+
             login_user(user, remember=form.remember.data)
             
             # Role-Based Redirect
@@ -64,5 +69,6 @@ def login():
 @auth.route('/logout')
 def logout():
     logout_user()
+    session.pop('role', None) # Clear the role from session
     flash('You have been logged out.', 'info')
     return redirect(url_for('main.index'))
