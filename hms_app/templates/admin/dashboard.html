@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Admin Dashboard</h2>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Total Doctors</div>
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ stats.doctors }}</h1>
+                <a href="{{ url_for('admin.manage_doctors') }}" class="btn btn-light btn-sm">Manage</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Active Patients</div>
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ stats.patients }}</h1>
+                <a href="{{ url_for('admin.manage_patients') }}" class="btn btn-light btn-sm">Manage</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Appointments</div>
+            <div class="card-body text-center">
+                <h1 class="display-4">{{ stats.appointments }}</h1>
+                <a href="{{ url_for('admin.manage_appointments') }}" class="btn btn-light btn-sm">View All</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

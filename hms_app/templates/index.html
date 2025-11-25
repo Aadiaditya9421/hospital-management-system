@@ -1,7 +1,31 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="text-center mt-5">
-    <h1>Welcome to the Hospital System</h1>
-    <p class="lead">Please Login or Register to continue.</p>
+<div class="p-5 mb-4 bg-light rounded-3 mt-4 text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Hospital Management System</h1>
+        <p class="col-md-8 fs-4 mx-auto">
+            Welcome to our advanced HMS portal. Manage appointments, doctors, and patients efficiently and securely.
+        </p>
+
+        {% if current_user.is_authenticated %}
+            <div class="mt-4">
+                <p class="lead">You are logged in as a <strong>{{ current_user.role|capitalize }}</strong>.</p>
+                
+                {% if current_user.role == 'admin' %}
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('admin.dashboard') }}">Go to Admin Dashboard</a>
+                {% elif current_user.role == 'doctor' %}
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('doctor.dashboard') }}">Go to Doctor Dashboard</a>
+                {% elif current_user.role == 'patient' %}
+                    <a class="btn btn-primary btn-lg" href="{{ url_for('patient.dashboard') }}">Go to Patient Dashboard</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="mt-4">
+                <a class="btn btn-primary btn-lg me-2" href="{{ url_for('auth.login') }}">Login</a>
+                <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.register') }}">Register as Patient</a>
+            </div>
+        {% endif %}
+        </div>
 </div>
 {% endblock %}

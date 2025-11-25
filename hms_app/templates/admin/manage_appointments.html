@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>All Appointments</h2>
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr><th>Date</th><th>Doctor</th><th>Patient</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+        {% for app in appointments %}
+        <tr>
+            <td>{{ app.appointment_time }}</td>
+            <td>{{ app.doctor.name }}</td>
+            <td>{{ app.patient.name }}</td>
+            <td>{{ app.status }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4">No appointments found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
