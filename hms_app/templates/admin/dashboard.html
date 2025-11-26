@@ -37,39 +37,50 @@
         <div class="card shadow">
             <div class="card-header">System Overview</div>
             <div class="card-body">
-                <canvas id="adminChart"></canvas>
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="adminChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    const ctx = document.getElementById('adminChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Doctors', 'Patients', 'Appointments'],
-            datasets: [{
-                label: 'System Count',
-                data: [{{ stats.doctors }}, {{ stats.patients }}, {{ stats.appointments }}],
-                backgroundColor: [
-                    'rgba(13, 110, 253, 0.7)', // Blue
-                    'rgba(25, 135, 84, 0.7)',  // Green
-                    'rgba(13, 202, 240, 0.7)'  // Cyan
-                ],
-                borderColor: [
-                    'rgba(13, 110, 253, 1)',
-                    'rgba(25, 135, 84, 1)',
-                    'rgba(13, 202, 240, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: { beginAtZero: true }
-            }
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check if Chart.js is loaded
+        if (typeof Chart === 'undefined') {
+            console.error("Chart.js is not loaded! Check base.html");
+            return;
         }
+
+        const ctx = document.getElementById('adminChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Doctors', 'Patients', 'Appointments'],
+                datasets: [{
+                    label: 'System Count',
+                    data: [{{ stats.doctors }}, {{ stats.patients }}, {{ stats.appointments }}],
+                    backgroundColor: [
+                        'rgba(13, 110, 253, 0.7)', // Blue
+                        'rgba(25, 135, 84, 0.7)',  // Green
+                        'rgba(13, 202, 240, 0.7)'  // Cyan
+                    ],
+                    borderColor: [
+                        'rgba(13, 110, 253, 1)',
+                        'rgba(25, 135, 84, 1)',
+                        'rgba(13, 202, 240, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
     });
 </script>
 {% endblock %}
