@@ -6,35 +6,23 @@ from datetime import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
-    # 1. Check the session to see which table to look in (Fixes ID Collision)
     role = session.get('role')
-
-    if role == 'admin':
-        return Admin.query.get(int(user_id))
-    elif role == 'doctor':
-        return Doctor.query.get(int(user_id))
-    elif role == 'patient':
-        return Patient.query.get(int(user_id))
+    if role == 'admin': return Admin.query.get(int(user_id))
+    elif role == 'doctor': return Doctor.query.get(int(user_id))
+    elif role == 'patient': return Patient.query.get(int(user_id))
     
-    # 2. Fallback: If session is empty (e.g. 'Remember Me' cookie used after browser restart)
-    # This might still cause collision, but it's a necessary backup.
     admin = Admin.query.get(int(user_id))
     if admin: return admin
-    
     doctor = Doctor.query.get(int(user_id))
     if doctor: return doctor
-    
     return Patient.query.get(int(user_id))
 
 class Admin(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+    def set_password(self, password): self.password_hash = generate_password_hash(password)
+    def check_password(self, password): return check_password_hash(self.password_hash, password)
     @property
     def role(self): return "admin"
 
@@ -42,6 +30,10 @@ class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
     doctors = db.relationship('Doctor', backref='department', lazy=True)
+    
+    # NEW: Serializer
+    def to_dict(self):
+        return {'id': self.id, 'name': self.name}
 
 class Doctor(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,13 +42,19 @@ class Doctor(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     department_id = db.Column(db.Integer, db.ForeignKey('department.id'), nullable=False)
     appointments = db.relationship('Appointment', backref='doctor', lazy=True)
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+    def set_password(self, password): self.password_hash = generate_password_hash(password)
+    def check_password(self, password): return check_password_hash(self.password_hash, password)
     @property
     def role(self): return "doctor"
+
+    # NEW: Serializer
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'department': self.department.name
+        }
 
 class Patient(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -64,21 +62,32 @@ class Patient(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     appointments = db.relationship('Appointment', backref='patient', lazy=True)
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+    def set_password(self, password): self.password_hash = generate_password_hash(password)
+    def check_password(self, password): return check_password_hash(self.password_hash, password)
     @property
     def role(self): return "patient"
+
+    # NEW: Serializer
+    def to_dict(self):
+        return {'id': self.id, 'name': self.name, 'email': self.email}
 
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.id'), nullable=False)
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     appointment_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    status = db.Column(db.String(20), default='Booked') # Booked, Completed, Cancelled
+    status = db.Column(db.String(20), default='Booked') 
     treatment = db.relationship('Treatment', backref='appointment', uselist=False, lazy=True)
+
+    # NEW: Serializer
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'time': self.appointment_time.isoformat(),
+            'status': self.status,
+            'doctor': self.doctor.name,
+            'patient': self.patient.name
+        }
 
 class Treatment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

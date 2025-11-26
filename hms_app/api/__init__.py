@@ -8,7 +8,6 @@ db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
-login_manager.login_message_category = 'info'
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -24,17 +23,13 @@ def create_app(config_class=Config):
     from hms_app.admin.routes import admin
     from hms_app.doctor.routes import doctor
     from hms_app.patient.routes import patient
-    
-    # --- NEW: Import API Blueprint ---
-    from hms_app.api.routes import api
+    from hms_app.api.routes import api  # <-- Import API
 
     app.register_blueprint(main)
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(admin, url_prefix='/admin')
     app.register_blueprint(doctor, url_prefix='/doctor')
     app.register_blueprint(patient, url_prefix='/patient')
-    
-    # --- NEW: Register API Blueprint ---
-    app.register_blueprint(api, url_prefix='/api')
+    app.register_blueprint(api, url_prefix='/api') # <-- Register API at /api
 
     return app
