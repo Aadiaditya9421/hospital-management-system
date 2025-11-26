@@ -6,7 +6,7 @@
             <div class="card-body">
                 <h3 class="text-center mb-3">Patient Registration</h3>
                 
-                <form method="POST">
+                <form method="POST" class="needs-validation" novalidate>
                     {{ form.hidden_tag() }}
 
                     <div class="mb-3">
@@ -27,7 +27,6 @@
 
                     <div class="mb-3">
                         {{ form.password.label(class="form-label") }}
-                        
                         {% if form.password.errors %}
                             {{ form.password(class="form-control is-invalid") }}
                         {% else %}
@@ -44,11 +43,8 @@
                                 • At least one special character (!@#$...)
                             </small>
                         </div>
-
                         {% for error in form.password.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ error }}
-                            </div>
+                            <div class="invalid-feedback d-block">{{ error }}</div>
                         {% endfor %}
                     </div>
 
