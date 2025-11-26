@@ -8,26 +8,34 @@ from datetime import datetime
 
 doctor = Blueprint('doctor', __name__)
 
-# 1. DOCTOR DASHBOARD (View Appointments)
+# 1. DOCTOR DASHBOARD
 @doctor.route('/dashboard')
 @login_required
 @doctor_required
 def dashboard():
-    # Get all appointments for this doctor, ordered by time
-    # We filter to show only 'Booked' or 'Completed' (optional logic)
+    # 1. Get List of Appointments
     appointments = Appointment.query.filter_by(doctor_id=current_user.id)\
         .order_by(Appointment.appointment_time.asc()).all()
-    
-    return render_template('doctor/dashboard.html', appointments=appointments, title="Doctor Dashboard")
 
-# 2. TREAT APPOINTMENT (Add Diagnosis)
+    # 2. NEW: Calculate Stats for Chart
+    booked = Appointment.query.filter_by(doctor_id=current_user.id, status='Booked').count()
+    completed = Appointment.query.filter_by(doctor_id=current_user.id, status='Completed').count()
+    cancelled = Appointment.query.filter_by(doctor_id=current_user.id, status='Cancelled').count()
+    
+    chart_data = [booked, completed, cancelled]
+
+    return render_template('doctor/dashboard.html', 
+                           appointments=appointments, 
+                           chart_data=chart_data, 
+                           title="Doctor Dashboard")
+
+# 2. TREAT APPOINTMENT
 @doctor.route('/treat/<int:appointment_id>', methods=['GET', 'POST'])
 @login_required
 @doctor_required
 def treat_appointment(appointment_id):
     appointment = Appointment.query.get_or_404(appointment_id)
     
-    # Security Check: Ensure this appointment belongs to the current doctor
     if appointment.doctor_id != current_user.id:
         flash('You are not authorized to view this appointment.', 'danger')
         return redirect(url_for('doctor.dashboard'))
@@ -35,17 +43,12 @@ def treat_appointment(appointment_id):
     form = TreatmentForm()
     
     if form.validate_on_submit():
-        # 1. Create Treatment Record
         treatment = Treatment(
             appointment_id=appointment.id,
             diagnosis=form.diagnosis.data,
             prescription=form.prescription.data
         )
-        
-        # 2. Update Appointment Status
         appointment.status = 'Completed'
-        
-        # 3. Save to DB
         db.session.add(treatment)
         db.session.commit()
         
@@ -60,11 +63,8 @@ def treat_appointment(appointment_id):
 @doctor_required
 def patient_history(patient_id):
     patient = Patient.query.get_or_404(patient_id)
-    
-    # Get all past COMPLETED appointments for this patient
     history = Appointment.query.filter_by(patient_id=patient_id, status='Completed')\
         .order_by(Appointment.appointment_time.desc()).all()
-        
     return render_template('doctor/patient_history.html', patient=patient, history=history)
 
 # 4. CANCEL APPOINTMENT

@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
 <h2 class="mb-4">Doctor Dashboard</h2>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">Appointment Overview</div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="doctorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="card shadow">
     <div class="card-header bg-primary text-white">
         My Appointments
@@ -47,4 +61,21 @@
         </table>
     </div>
 </div>
+
+<script>
+    const ctx = document.getElementById('doctorChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Booked', 'Completed', 'Cancelled'],
+            datasets: [{
+                data: {{ chart_data | tojson }}, 
+                backgroundColor: ['#ffc107', '#198754', '#dc3545'] 
+            }]
+        },
+        options: {
+            maintainAspectRatio: false
+        }
+    });
+</script>
 {% endblock %}

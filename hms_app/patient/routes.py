@@ -16,7 +16,14 @@ def dashboard():
     upcoming = Appointment.query.filter_by(patient_id=current_user.id, status='Booked')\
         .order_by(Appointment.appointment_time.asc()).all()
     
-    return render_template('patient/dashboard.html', upcoming=upcoming, title="Patient Dashboard")
+    # NEW: Calculate Stats for Chart
+    completed = Appointment.query.filter_by(patient_id=current_user.id, status='Completed').count()
+    cancelled = Appointment.query.filter_by(patient_id=current_user.id, status='Cancelled').count()
+    
+    return render_template('patient/dashboard.html', 
+                           upcoming=upcoming, 
+                           stats=[completed, cancelled],
+                           title="Patient Dashboard")
 
 # 2. BOOK APPOINTMENT
 @patient.route('/book', methods=['GET', 'POST'])
@@ -24,9 +31,7 @@ def dashboard():
 @patient_required
 def book_appointment():
     form = BookAppointmentForm()
-    
     form.department.choices = [(d.id, d.name) for d in Department.query.all()]
-    
     doctors = Doctor.query.all()
     form.doctor.choices = [(doc.id, f"{doc.name} ({doc.department.name})") for doc in doctors]
 
@@ -36,8 +41,7 @@ def book_appointment():
         
         if doctor_id and date_str:
             try:
-                # FIXED: Updated format to match 12-hour AM/PM string
-                # %I = 12-hour, %p = AM/PM
+                # 12-hour format match
                 appt_time = datetime.strptime(date_str, '%Y-%m-%d %I:%M %p')
                 
                 conflict = Appointment.query.filter_by(doctor_id=doctor_id, appointment_time=appt_time).first()

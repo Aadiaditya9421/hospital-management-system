@@ -1,0 +1,7 @@
+/* Custom chart container to limit height while maintaining responsiveness */
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 250px;
+    width: 100%;
+}

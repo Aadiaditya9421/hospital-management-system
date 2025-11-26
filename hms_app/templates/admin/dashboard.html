@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <h2 class="mb-4">Admin Dashboard</h2>
-<div class="row">
+
+<div class="row mb-4">
     <div class="col-md-4">
         <div class="card text-white bg-primary mb-3">
             <div class="card-header">Total Doctors</div>
@@ -30,4 +31,45 @@
         </div>
     </div>
 </div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header">System Overview</div>
+            <div class="card-body">
+                <canvas id="adminChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('adminChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Doctors', 'Patients', 'Appointments'],
+            datasets: [{
+                label: 'System Count',
+                data: [{{ stats.doctors }}, {{ stats.patients }}, {{ stats.appointments }}],
+                backgroundColor: [
+                    'rgba(13, 110, 253, 0.7)', // Blue
+                    'rgba(25, 135, 84, 0.7)',  // Green
+                    'rgba(13, 202, 240, 0.7)'  // Cyan
+                ],
+                borderColor: [
+                    'rgba(13, 110, 253, 1)',
+                    'rgba(25, 135, 84, 1)',
+                    'rgba(13, 202, 240, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
 {% endblock %}
