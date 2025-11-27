@@ -17,16 +17,21 @@ def dashboard():
     appointments = Appointment.query.filter_by(doctor_id=current_user.id)\
         .order_by(Appointment.appointment_time.asc()).all()
 
-    # 2. NEW: Calculate Stats for Chart
+    # 2. Calculate Stats for Chart
     booked = Appointment.query.filter_by(doctor_id=current_user.id, status='Booked').count()
     completed = Appointment.query.filter_by(doctor_id=current_user.id, status='Completed').count()
     cancelled = Appointment.query.filter_by(doctor_id=current_user.id, status='Cancelled').count()
     
+    # Check if total is zero (to handle empty chart)
+    total_appts = booked + completed + cancelled
+    
+    # We pass 'chart_data' as a list [Booked, Completed, Cancelled]
     chart_data = [booked, completed, cancelled]
 
     return render_template('doctor/dashboard.html', 
                            appointments=appointments, 
-                           chart_data=chart_data, 
+                           chart_data=chart_data,
+                           total_appts=total_appts, # Pass total count to check in HTML
                            title="Doctor Dashboard")
 
 # 2. TREAT APPOINTMENT

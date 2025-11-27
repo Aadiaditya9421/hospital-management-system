@@ -16,7 +16,7 @@ def dashboard():
     upcoming = Appointment.query.filter_by(patient_id=current_user.id, status='Booked')\
         .order_by(Appointment.appointment_time.asc()).all()
     
-    # NEW: Calculate Stats for Chart
+    # Calculate Stats for Chart
     completed = Appointment.query.filter_by(patient_id=current_user.id, status='Completed').count()
     cancelled = Appointment.query.filter_by(patient_id=current_user.id, status='Cancelled').count()
     
@@ -41,7 +41,7 @@ def book_appointment():
         
         if doctor_id and date_str:
             try:
-                # 12-hour format match
+                # FIXED: Parse 12-hour format with AM/PM
                 appt_time = datetime.strptime(date_str, '%Y-%m-%d %I:%M %p')
                 
                 conflict = Appointment.query.filter_by(doctor_id=doctor_id, appointment_time=appt_time).first()

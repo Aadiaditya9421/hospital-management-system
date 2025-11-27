@@ -21,11 +21,26 @@
                 {% endif %}
             </div>
         {% else %}
-            <div class="mt-4">
-                <a class="btn btn-primary btn-lg me-2" href="{{ url_for('auth.login') }}">Login</a>
-                <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.register') }}">Register as Patient</a>
+            <div class="d-flex gap-3 justify-content-center flex-wrap mt-4">
+                <a class="btn btn-primary btn-lg px-4" href="{{ url_for('auth.login') }}">Login</a>
+                <a class="btn btn-outline-secondary btn-lg px-4" href="{{ url_for('auth.register') }}">Register as Patient</a>
             </div>
         {% endif %}
+    </div>
+</div>
+
+<div class="row align-items-md-stretch mt-4">
+    <div class="col-md-6 mb-3">
+        <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>For Doctors</h2>
+            <p>Manage your daily schedule, view patient history, and prescribe treatments digitally.</p>
         </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>For Patients</h2>
+            <p>Book appointments with specialists, view your medical history, and manage your profile.</p>
+        </div>
+    </div>
 </div>
 {% endblock %}

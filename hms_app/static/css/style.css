@@ -1,7 +1,35 @@
-/* Custom chart container to limit height while maintaining responsiveness */
+/* Custom chart container */
 .chart-container {
     position: relative;
     margin: auto;
     height: 250px;
     width: 100%;
+}
+
+/* Ensure the footer sticks to the bottom */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa; /* Light gray background for better contrast */
+}
+
+main {
+    flex: 1 0 auto; /* Pushes footer down */
+}
+
+/* Card hover effect for dashboards */
+.card {
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Mobile Tweak: Add space under navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }

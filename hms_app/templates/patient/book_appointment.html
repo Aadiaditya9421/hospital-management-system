@@ -33,9 +33,9 @@
     document.addEventListener('DOMContentLoaded', function() {
         flatpickr("#appointment_time", {
             enableTime: true,
-            dateFormat: "Y-m-d h:i K",
+            dateFormat: "Y-m-d h:i K", // Format: 2025-11-28 02:30 PM
             minDate: "today",
-            time_24hr: false,
+            time_24hr: false,          // Enable AM/PM Selector
             minuteIncrement: 30
         });
     });
