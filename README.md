@@ -159,31 +159,31 @@ Paste the following script to populate the database:
 from hms_app import db
 from hms_app.models import Admin, Doctor, Department, Patient
 
-# Create Departments
+# 1. Create Departments
 d1 = Department(name='Cardiology')
 d2 = Department(name='Neurology')
 d3 = Department(name='General Surgery')
 db.session.add_all([d1, d2, d3])
 db.session.commit()
 
-# Create Admin
+# 2. Create Admin
 admin = Admin(username='admin@hms.com')
 admin.set_password('admin123')
 db.session.add(admin)
 
-# Create Doctor
+# 3. Create Doctor
 doc = Doctor(name='Dr. Strange', email='strange@hms.com', department_id=d1.id, phone_contact='987-654-3210')
 doc.set_password('magic123')
 db.session.add(doc)
 
-# Create Patient
-pat = Patient(name='Tony Stark', email='tony@stark.com')
-pat.set_password('ironman123')
+# 4. Create Patient
+pat = Patient(name='Tony Pony', email='tonypony@google.com')
+pat.set_password('Tonypony@99')
 db.session.add(pat)
 
+# 5. Save
 db.session.commit()
-print("Database Initialized!")
-exit()
+print("Success!")
 ```
 
 -----
@@ -204,7 +204,7 @@ Open your browser at: `http://127.0.0.1:5000/`
 | :--- | :--- | :--- |
 | **Admin** | `admin@hms.com` | `admin123` |
 | **Doctor** | `strange@hms.com` | `magic123` |
-| **Patient** | `tony@stark.com` | `ironman123` |
+| **Patient** | `tonypony@google.com` | `Tonypony@99` |
 
 -----
 
