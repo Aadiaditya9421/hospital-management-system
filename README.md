@@ -1,10 +1,3 @@
-Here is a professional **`README.md`** file tailored specifically for your Hospital Management System project.
-
-You can copy the raw markdown below and paste it into a file named `README.md` in the root of your project folder.
-
------
-
-````markdown
 # 🏥 Hospital Management System (HMS)
 
 A full-stack web application designed to streamline hospital administration, doctor scheduling, and patient appointment bookings. Built with **Flask** and **Bootstrap 5**.
