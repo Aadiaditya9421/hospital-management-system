@@ -220,4 +220,7 @@ The system exposes RESTful endpoints for integration.
 This project was developed for the Modern Application Development course. All logic and code structure are original or adapted from official documentation.
 
 ```
+https://docs.google.com/document/u/3/d/e/2PACX-1vQxv63EiTXD1npPq146b1peYbjifVVljb5ppesXJ4CxGLP5K6J0Ig-g7Ip3b911hj8hP_FwRY08tLbx/pub
+https://docs.google.com/document/u/3/d/e/2PACX-1vTuL0tmTqvXf-dlWFGma8XCpjUtQtRMu-mK4sWOxoCjVamR-8vQACQDoxzl45fsKnwWSLzFn3eyitOH/pub
+https://docs.google.com/document/u/3/d/e/2PACX-1vTw6Eq8jxNIuQbLsxSykydMjvrKrjZDBKbeIfxycbh0w-qJvMViHRj_MxUQILHgVSjVo2lZRJk6Uxp1/pub
 ```
